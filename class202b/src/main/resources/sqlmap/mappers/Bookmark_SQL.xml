@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Bookmark">
+
+<!-- 	 북마크 그룹에 추가된 게시물 목록 -->
+	<resultMap id="bookGroupViewMap" type="java.util.Map">
+		<result property="type" 	column="type"></result>
+		<result property="id" 		column="id"></result>
+		<result property="memId" 	column="mem_id"></result>
+		<result property="idx" 		column="idx"></result>
+		<result property="groupNm" 	column="groupNm"></result>
+		<result property="ctgr" 	column="ctgr"></result>
+		<result property="title" 	column="title"></result>
+		<result property="contId" 	column="contId"></result>
+		<result property="thumb" 	column="thumb"></result>
+		<result property="url" 		column="url"></result>
+	</resultMap>
+	
+<!-- 	 북마크 그룹 리스트 -->
+	<select id="bookGroupView" parameterType="java.util.Map" resultMap="bookGroupViewMap">      
+        SELECT 
+		    '주짓수 배우기' type
+		    , B.ID id
+		    , B.MEM_ID memId
+		    , B.IDX idx
+		    , G.GROUP_NM groupNm
+		    , B.CTGR ctgr
+		    , V.VIDEO_TITLE title
+		    , V.VIDEO_ID contId
+		    , V.VIDEO_THUMB thumb
+		    , (${videoUrl} || B.CTGR) url 
+		FROM 
+		   BOOK_GROUP G, BOOKMARK B, VIDEO V 
+		WHERE 
+		    B.MEM_ID = #{memId}
+		    AND G.IDX = B.IDX(+)
+		    AND B.CTGR = V.VIDEO_ID
+		UNION ALL
+		SELECT 
+		    '주짓수 배우기' type
+		    , B.ID id
+		    , B.MEM_ID memId
+		    , '9999' idx
+		    , '미분류' groupNm
+		    , B.CTGR ctgr
+		    , V.VIDEO_TITLE title
+		    , V.VIDEO_ID contId
+		    , V.VIDEO_THUMB thumb
+		    , (${videoUrl} || B.CTGR) url 
+		FROM 
+		   BOOKMARK B, VIDEO V 
+		WHERE 
+		    B.MEM_ID = #{memId}
+		    AND B.CTGR = V.VIDEO_ID    
+		    AND B.IDX IS NULL
+		UNION ALL
+		SELECT 
+		    '이벤트' type
+		    , B.ID id
+		    , B.MEM_ID memId
+		    , B.IDX idx
+		    , G.GROUP_NM groupNm
+		    , B.CTGR ctgr
+		    , E.EVENT_TITLE title
+		    , E.EVENT_ID contId
+		    , '' thumb
+		    ,  (case 
+		            when INSTR(E.event_id,'SEN', 1) = 1  then ${seminarUrl} || B.CTGR 
+		            when INSTR(E.event_id,'CHP', 1) = 1  then ${championshipUrl} || B.CTGR 
+		        end ) url
+		FROM 
+		    BOOK_GROUP G, EVENT E, BOOKMARK B
+		WHERE 
+		    B.MEM_ID = #{memId}
+		    AND G.IDX = B.IDX(+)
+		    AND B.CTGR = E.EVENT_ID
+		UNION ALL
+		SELECT 
+		    '이벤트' type
+		    , B.ID id
+		    , B.MEM_ID memId
+		    , '9999' idx
+		    , '미분류' groupNm
+		    , B.CTGR ctgr
+		    , E.EVENT_TITLE title
+		    , E.EVENT_ID contId
+		    , '' thumb
+		    ,  (case 
+		            when INSTR(E.event_id,'SEN', 1) = 1  then '/jiutopia/seminarDetail.do?eventId=' || B.CTGR 
+		            when INSTR(E.event_id,'CHP', 1) = 1  then '/jiutopia/championshipDetail.do?eventId=' || B.CTGR 
+		        end ) url
+		FROM 
+		    EVENT E, BOOKMARK B
+		WHERE 
+		    B.MEM_ID = #{memId}
+		    AND B.CTGR = E.EVENT_ID
+		    AND B.IDX IS NULL
+		ORDER BY idx ASC
+	</select>
+	
+	<!-- 북마크 추가 -->
+	<insert id="bookmarkAdd">
+		INSERT INTO BOOKMARK (
+			ID,
+			MEM_ID, 
+			CTGR)
+		VALUES (
+			TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF3'),
+			#{memId}, 
+			#{ctgr})
+	</insert>
+	
+	<!-- 북마크 그룹에서 제거 -->
+	<update id="bookmarkDelFromGroup">
+		UPDATE BOOKMARK
+		SET IDX = NULL
+		WHERE ID = #{id}
+	</update>
+	
+	<!-- 북마크 그룹 제거 -->
+	<update id="bookmarkGroupDel">
+		 UPDATE BOOKMARK
+		 SET IDX = NULL
+		 WHERE MEM_ID = #{memId}
+		     AND IDX = #{idx}
+	</update>
+	
+	<!-- 북마크 그룹에 게시물 추가 -->
+	<update id="addIntoBookGroup">
+		 UPDATE BOOKMARK
+		 SET IDX = #{idx}
+		 WHERE ID = #{id}
+	</update>
+	
+	<!-- 즐겨찾기 해제 -->
+	<delete id="bookmarkDel">
+		DELETE FROM BOOKMARK
+		WHERE ID = #{id}
+	</delete>
+	
+</mapper>
+
