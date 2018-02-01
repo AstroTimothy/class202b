@@ -14,15 +14,15 @@
 	</resultMap>
 	
 	<resultMap id="videoMap" type="java.util.Map">
-		<result property="videoId" column="VIDEO_ID" />
-		<result property="videoCtgr" column="VIDEO_CTGR" />
+		<result property="videoId"    column="VIDEO_ID" />
+		<result property="videoCtgr"  column="VIDEO_CTGR" />
 		<result property="videoTitle" column="VIDEO_TITLE" />
-		<result property="videoCont" column="VIDEO_CONT" />
-		<result property="videoUrl" column="VIDEO_URL" />
+		<result property="videoCont"  column="VIDEO_CONT" />
+		<result property="videoUrl"   column="VIDEO_URL" />
 		<result property="videoWtime" column="VIDEO_WTIME" />
 		<result property="videoThumb" column="VIDEO_THUMB" />
-		<result property="del" column="DEL" />
-		<result property="memId" column="MEM_ID" />
+		<result property="del" 		  column="DEL" />
+		<result property="memId" 	  column="MEM_ID" />
 	</resultMap>
 	
 	<!-- 비디오 목록 -->

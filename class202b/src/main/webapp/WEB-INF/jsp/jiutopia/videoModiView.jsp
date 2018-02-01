@@ -116,7 +116,7 @@
 		});
 		
 		$(function(){
-			var sltd = "<%=rtnParams.get("videoCtgr") == null? "": rtnParams.get("videoCtgr")%>";
+			var sltd = "<%=videoDetail.get("videoCtgr") == null? "": videoDetail.get("videoCtgr")%>";
 			if (!sltd.equals("")) {
 				$("#videoCtgr").val("").prop("selected", true);
 			} else {

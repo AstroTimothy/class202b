@@ -15,25 +15,19 @@ public class VideoVo {
 	private int pageNo;
 	
 	
-	public String getVideoCtgr() {
-		return videoCtgr;
-	}
-	public void setVideoCtgr(String videoCtgr) {
-		this.videoCtgr = videoCtgr;
-	}
-	
-	public String getVideoType() {
-		return videoType;
-	}
-	public void setVideoType(String videoType) {
-		this.videoType = videoType;
-	}
-	
 	public String getVideoId() {
 		return videoId;
 	}
 	public void setVideoId(String videoId) {
 		this.videoId = videoId;
+	}
+	
+	
+	public String getVideoCtgr() {
+		return videoCtgr;
+	}
+	public void setVideoCtgr(String videoCtgr) {
+		this.videoCtgr = videoCtgr;
 	}
 	
 	
@@ -77,6 +71,14 @@ public class VideoVo {
 	}
 	
 	
+	public String getVideoType() {
+		return videoType;
+	}
+	public void setVideoType(String videoType) {
+		this.videoType = videoType;
+	}
+	
+	
 	public String getDel() {
 		return del;
 	}
@@ -93,6 +95,7 @@ public class VideoVo {
 	}
 	
 	
+	
 	public int getPageSize() {
 		return pageSize;
 	}
@@ -107,5 +110,7 @@ public class VideoVo {
 	public void setPageNo(int pageNo) {
 		this.pageNo = pageNo;
 	}
+	
+	
 
 }
