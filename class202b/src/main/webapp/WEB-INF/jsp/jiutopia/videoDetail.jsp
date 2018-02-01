@@ -127,6 +127,10 @@
 						<input type="hidden" name="videoId" value="<%=videoId%>">
 						<input type="submit" value="삭제">
 					</form>
+					<form id="videoModi" action="<%=contextPath%>/jiutopia/videoModiView.do" method="post">
+						<input type="hidden" name="videoId" value="<%=videoId%>">
+						<input type="submit" value="수정">
+					</form>
 					<% }%>
 					</td>
 				</tr>

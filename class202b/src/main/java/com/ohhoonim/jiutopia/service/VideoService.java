@@ -13,5 +13,6 @@ public interface VideoService {
 	public Map<String, String> videoDetailView(VideoVo vo);
 	public int videoDel(VideoVo vo);
 	public int videoAdd(VideoVo vo);
+	public int videoModi(VideoVo vo);
 	
 }

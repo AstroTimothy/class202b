@@ -38,6 +38,10 @@ public class VideoDao extends Mapper {
 		return insert("videoAdd", vo);
 	}
 
+	public int videoModi(VideoVo vo) {
+		return update("videoModi", vo);
+	}
+
 	
 	
 }

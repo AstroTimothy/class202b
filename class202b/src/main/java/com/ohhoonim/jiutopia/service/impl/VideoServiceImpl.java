@@ -56,5 +56,10 @@ public class VideoServiceImpl implements VideoService {
 	public int videoAdd(VideoVo vo) {
 		return dao.videoAdd(vo);
 	}
+
+	@Override
+	public int videoModi(VideoVo vo) {
+		return dao.videoModi(vo);
+	}
 	
 }

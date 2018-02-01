@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -136,7 +137,7 @@ public class VideoController {
 		return "jiutopia/videoPosting";
 	}
 	@RequestMapping("/videoAdd.do") 
-	public String videoAdd(@RequestParam Map<String, String> req,  RedirectAttributes reAttr) {
+	public String videoAdd(@RequestParam Map<String, String> req, RedirectAttributes reAttr) {
 		
 		String rtnUrl = "redirect:/jiutopia/videoPosting.do";
 		
@@ -187,4 +188,82 @@ public class VideoController {
 		return "redirect:/jiutopia/videoDetail.do?videoId="+videoId;
 	}
 
+//	비디오 수정
+	@RequestMapping("/videoModiView.do")
+	public String videoModiVidew(@RequestParam Map<String, String> req, ModelMap model) {
+		
+		String videoId = req.get("videoId") == null? "": req.get("videoId");
+		
+		VideoVo vo = new VideoVo();
+		
+		vo.setVideoId(videoId);
+		
+		Map<String, String> map = videoService.videoDetailView(vo);
+		
+		model.addAttribute("videoDetail", map);
+		
+		return "jiutopia/videoModiView";
+	}
+	@RequestMapping("/videoModi.do") 
+	public String videoModi(@RequestParam Map<String, String> req, RedirectAttributes reAttr) {
+		
+		String rtnUrl = "redirect:/jiutopia/videoModiView.do";
+		
+		String videoId = req.get("videoId") == null? "": req.get("videoId");
+		String videoTitle = req.get("videoTitle") == null? "": req.get("videoTitle");
+		String videoCtgr = req.get("videoCtgr") == null? "": req.get("videoCtgr");
+		String videoUrl = req.get("videoUrl") == null? "": req.get("videoUrl");
+		String videoCont = req.get("videoCont") == null? "": req.get("videoCont");
+		
+		String videoThumb = idGenService.thumbGen2(videoUrl);
+		
+//		자바스크립트 실행 방지
+		String scriptBanned = videoCont.replaceAll("(?i)<script", "&lt;script");
+		
+		if (videoTitle.equals("")) {
+			req.put("msg", "제목을 입력해주세요");
+			req.put("videoId", videoId);
+			req.put("videoTitle", videoTitle);
+			req.put("videoCtgr", videoCtgr);
+			req.put("videoUrl", videoUrl);
+			req.put("videoCont", videoCont);
+			reAttr.addFlashAttribute("rtnParams", req);
+			return rtnUrl;
+		}
+		else if (videoUrl.equals("")) {
+			req.put("msg", "URL을 입력해주세요");
+			req.put("videoId", videoId);
+			req.put("videoTitle", videoTitle);
+			req.put("videoCtgr", videoCtgr);
+			req.put("videoUrl", videoUrl);
+			req.put("videoCont", videoCont);
+			reAttr.addFlashAttribute("rtnParams", req);
+			return rtnUrl;
+		}
+		else if (videoCont.equals("")) {
+			req.put("msg", "내용을 입력해주세요");
+			req.put("videoId", videoId);
+			req.put("videoTitle", videoTitle);
+			req.put("videoCtgr", videoCtgr);
+			req.put("videoUrl", videoUrl);
+			req.put("videoCont", videoCont);
+			reAttr.addFlashAttribute("rtnParams", req);
+			return rtnUrl;		
+		} else {			
+			
+			VideoVo vo = new VideoVo();
+			
+			vo.setVideoId(videoId);
+			vo.setVideoTitle(videoTitle);
+			vo.setVideoCtgr(videoCtgr);
+			vo.setVideoUrl(videoUrl);
+			vo.setVideoThumb(videoThumb);
+			vo.setVideoCont(scriptBanned);
+			
+			videoService.videoModi(vo);
+			
+		}
+		return "redirect:/jiutopia/videoDetail.do?videoId="+videoId;
+	}
+	
 }
