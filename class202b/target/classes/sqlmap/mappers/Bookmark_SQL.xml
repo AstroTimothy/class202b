@@ -6,9 +6,9 @@
 <!-- 	 북마크 그룹에 추가된 게시물 목록 -->
 	<resultMap id="bookGroupViewMap" type="java.util.Map">
 		<result property="type" 	column="type"></result>
-		<result property="id" 		column="id"></result>
-		<result property="memId" 	column="mem_id"></result>
 		<result property="idx" 		column="idx"></result>
+		<result property="memId" 	column="memId"></result>
+		<result property="groupId" column="groupId"></result>
 		<result property="groupNm" 	column="groupNm"></result>
 		<result property="ctgr" 	column="ctgr"></result>
 		<result property="title" 	column="title"></result>
@@ -21,9 +21,9 @@
 	<select id="bookGroupView" parameterType="java.util.Map" resultMap="bookGroupViewMap">      
         SELECT 
 		    '주짓수 배우기' type
-		    , B.ID id
-		    , B.MEM_ID memId
 		    , B.IDX idx
+		    , B.MEM_ID memId
+		    , B.GROUP_ID groupId
 		    , G.GROUP_NM groupNm
 		    , B.CTGR ctgr
 		    , V.VIDEO_TITLE title
@@ -34,14 +34,14 @@
 		   BOOK_GROUP G, BOOKMARK B, VIDEO V 
 		WHERE 
 		    B.MEM_ID = #{memId}
-		    AND G.IDX = B.IDX(+)
+		    AND G.GROUP_ID = B.GROUP_ID(+)
 		    AND B.CTGR = V.VIDEO_ID
 		UNION ALL
 		SELECT 
 		    '주짓수 배우기' type
-		    , B.ID id
+		    , B.IDX idx
 		    , B.MEM_ID memId
-		    , '9999' idx
+		    , '9999' groupId
 		    , '미분류' groupNm
 		    , B.CTGR ctgr
 		    , V.VIDEO_TITLE title
@@ -53,13 +53,13 @@
 		WHERE 
 		    B.MEM_ID = #{memId}
 		    AND B.CTGR = V.VIDEO_ID    
-		    AND B.IDX IS NULL
+		    AND B.GROUP_ID IS NULL
 		UNION ALL
 		SELECT 
 		    '이벤트' type
-		    , B.ID id
-		    , B.MEM_ID memId
 		    , B.IDX idx
+		    , B.MEM_ID memId
+		    , B.GROUP_ID groupId
 		    , G.GROUP_NM groupNm
 		    , B.CTGR ctgr
 		    , E.EVENT_TITLE title
@@ -73,14 +73,14 @@
 		    BOOK_GROUP G, EVENT E, BOOKMARK B
 		WHERE 
 		    B.MEM_ID = #{memId}
-		    AND G.IDX = B.IDX(+)
+		    AND G.GROUP_ID = B.GROUP_ID(+)
 		    AND B.CTGR = E.EVENT_ID
 		UNION ALL
 		SELECT 
 		    '이벤트' type
-		    , B.ID id
+		    , B.IDX idx
 		    , B.MEM_ID memId
-		    , '9999' idx
+		    , '9999' groupId
 		    , '미분류' groupNm
 		    , B.CTGR ctgr
 		    , E.EVENT_TITLE title
@@ -95,7 +95,7 @@
 		WHERE 
 		    B.MEM_ID = #{memId}
 		    AND B.CTGR = E.EVENT_ID
-		    AND B.IDX IS NULL
+		    AND B.GROUP_ID IS NULL
 		ORDER BY idx ASC
 	</select>
 	
